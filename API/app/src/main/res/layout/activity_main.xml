@@ -1,18 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+   xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="match_parent"
    android:layout_height="match_parent"
    android:orientation="vertical">
 
-
-   <!-- button to add random data -->
-   <Button
-      android:id="@+id/bt_new_note"
+   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="Add Random Data" />
+      android:orientation="horizontal">
 
+      <!-- button to read the Notes from API without authentication -->
+      <Button
+         android:id="@+id/bt_readNotes"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Get with no Authentication" />
+   </LinearLayout>
 
+   <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+      <!-- button to read the Notes from API with Basic Authentication -->
+      <Button
+         android:id="@+id/bt_getNotesWithBA"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Get with Basic Auth" />
+
+      <!-- button to read the Notes from API without authentication -->
+      <Button
+         android:id="@+id/bt_getNotesWithJWT"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Get with JWToken" />
+
+   </LinearLayout>
+
+   <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <!-- button to add random data -->
+      <Button
+         android:id="@+id/bt_new_note"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Add Random Data" />
+
+      <!-- button to add random data -->
+      <Button
+         android:id="@+id/bt_ClearScreen"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Clear screen" />
+   </LinearLayout>
    <!-- show the list of cardViews with data read from API -->
    <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/nodeListRecyclerView"
