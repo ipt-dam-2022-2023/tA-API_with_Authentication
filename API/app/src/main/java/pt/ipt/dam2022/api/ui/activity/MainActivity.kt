@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import okhttp3.Credentials
 import pt.ipt.dam2022.api.R
 import pt.ipt.dam2022.api.model.APIResult
 import pt.ipt.dam2022.api.model.Note
@@ -25,9 +26,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // ask Retrofit to read data from API, and list Notes on screen
-        listNotes()
-
         // add reference to button that we are going to use
         // to add some random data to API
         val btNewNote = findViewById<Button>(R.id.bt_new_note)
@@ -35,6 +33,34 @@ class MainActivity : AppCompatActivity() {
             // define the task that app will do when a user click the button
             addNewNote()
         }
+
+        // add reference to button to read data with no authentication
+        val btListNotes=findViewById<Button>(R.id.bt_readNotes)
+        btListNotes.setOnClickListener {
+            listNotes()
+        }
+
+        // add reference to button to read data with Basic Authentication
+        val btListNotesBA=findViewById<Button>(R.id.bt_getNotesWithBA)
+        btListNotes.setOnClickListener {
+            listNotesBA()
+        }
+
+        // clean screen
+        val btClear=findViewById<Button>(R.id.bt_ClearScreen)
+        btListNotes.setOnClickListener {
+            // do something to clear screen
+        }
+    }
+
+    /**
+     * access the API with Basic Authentication
+     */
+    private fun listNotesBA() {
+        val call = RetrofitInitializer()
+                      .noteService()
+                      .listBA(Credentials.basic("admin", "admin"))
+        processList(call)
     }
 
     /**
@@ -59,7 +85,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun addNote(note: Note, onResult: (APIResult?) -> Unit) {
         // prepare Retrofit to add the Note
-        val call = RetrofitInitializer().noteService().addNote(note)
+        val call = RetrofitInitializer()
+                      .noteService()
+                      .addNote(note.title, note.description)
 
         // Tell Retrofit to do the work
         call.enqueue(object :Callback<APIResult>{
@@ -75,10 +103,20 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
+    /**
+     * access API without authentication
+     */
     private fun listNotes() {
         // ask retrofit to read the API data
         val call = RetrofitInitializer().noteService().list()
+        // draw Notes on screen
+        processList(call)
+    }
+
+    /**
+     * add the Notes to the interface
+     */
+    private fun processList(call:Call<List<Note>>){
         // use data read
         call.enqueue(object : Callback<List<Note>?> {
             override fun onResponse(

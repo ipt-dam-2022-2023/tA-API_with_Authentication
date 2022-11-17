@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 /**
@@ -23,7 +24,7 @@ interface NoteService {
      * function to read data from API with Basic Authentication
      */
     @GET("api/getNotesBA.php")
-    fun listBA(): Call<List<Note>>
+    fun listBA(@Header("Authorization") authorization:String): Call<List<Note>>
 
     /**
      * function to read data from API with JWTokens
