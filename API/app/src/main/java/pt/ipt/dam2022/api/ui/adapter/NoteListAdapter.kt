@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import pt.ipt.dam2022.api.R
 import pt.ipt.dam2022.api.model.Note
 
-class NoteListAdapter(
-        private val notes: List<Note>, private val context: Context
+class NoteListAdapter(private val notes: List<Note>,
+                      private val context: Context
 ) : RecyclerView.Adapter<NoteListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(

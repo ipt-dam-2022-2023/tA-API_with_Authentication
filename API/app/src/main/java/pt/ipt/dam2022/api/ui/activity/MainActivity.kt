@@ -42,13 +42,13 @@ class MainActivity : AppCompatActivity() {
 
         // add reference to button to read data with Basic Authentication
         val btListNotesBA=findViewById<Button>(R.id.bt_getNotesWithBA)
-        btListNotes.setOnClickListener {
+        btListNotesBA.setOnClickListener {
             listNotesBA()
         }
 
         // clean screen
         val btClear=findViewById<Button>(R.id.bt_ClearScreen)
-        btListNotes.setOnClickListener {
+        btClear.setOnClickListener {
             // do something to clear screen
         }
     }
@@ -131,6 +131,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<List<Note>?>?, t: Throwable?) {
+                t?.printStackTrace()
                 t?.message?.let { Log.e("I can not read data...", it) }
             }
         })

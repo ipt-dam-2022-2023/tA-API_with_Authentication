@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class RetrofitInitializer {
 
-    private val host = "http://ram.ipt.pt" //"https://adamastor.ipt.pt/DAM-API/"
+    private val host = "http://ram.ipt.pt/" //"https://adamastor.ipt.pt/DAM-API/"
 
     // set the data read from API to be used from Retrofit
     private val gson: Gson = GsonBuilder().setLenient().create()
@@ -20,7 +20,8 @@ class RetrofitInitializer {
     private val retrofit =
         Retrofit.Builder()
                 .baseUrl(host)
-                .addConverterFactory(GsonConverterFactory.create(gson)).build()
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
 
     fun noteService() = retrofit.create(NoteService::class.java)
 

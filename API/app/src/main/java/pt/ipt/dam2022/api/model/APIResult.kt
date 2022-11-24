@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * define data structure to add data to API
  */
-class APIResult (
+data class APIResult (
         @SerializedName("code") val code: String?,
         @SerializedName("description") val description: String?
         )

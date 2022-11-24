@@ -3,11 +3,7 @@ package pt.ipt.dam2022.api.retrofit.service
 import pt.ipt.dam2022.api.model.APIResult
 import pt.ipt.dam2022.api.model.Note
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * specify the part of 'url' that we want to access
@@ -17,13 +13,13 @@ interface NoteService {
     /**
      * function to READ data from API
      */
-    @GET("api/getNotes.php")
+    @GET("API/getNotes.php")
     fun list(): Call<List<Note>>
 
     /**
      * function to read data from API with Basic Authentication
      */
-    @GET("api/getNotesBA.php")
+    @GET("API/getNotesBA.php")
     fun listBA(@Header("Authorization") authorization:String): Call<List<Note>>
 
     /**
@@ -35,7 +31,7 @@ interface NoteService {
     /**
      * function to ADD (write) data to API
      */
-    @POST("api/addNotes.php")
+    @POST("API/addNote.php")
     fun addNote(@Field ("title") title:String?,
                 @Field("description") description :String?
     ): Call<APIResult>
