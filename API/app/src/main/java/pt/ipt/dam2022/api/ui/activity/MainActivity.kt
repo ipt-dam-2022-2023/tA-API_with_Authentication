@@ -11,6 +11,7 @@ import okhttp3.Credentials
 import pt.ipt.dam2022.api.R
 import pt.ipt.dam2022.api.model.APIResult
 import pt.ipt.dam2022.api.model.Note
+import pt.ipt.dam2022.api.model.TokenJWT
 import pt.ipt.dam2022.api.retrofit.RetrofitInitializer
 import pt.ipt.dam2022.api.ui.adapter.NoteListAdapter
 import retrofit2.Call
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         // here we must ask for permission to access internet
         // please, see code from last classes
         //********************************************************
-        
+
 
         // add reference to button that we are going to use
         // to add some random data to API
@@ -41,19 +42,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         // add reference to button to read data with no authentication
-        val btListNotes=findViewById<Button>(R.id.bt_readNotes)
+        val btListNotes = findViewById<Button>(R.id.bt_readNotes)
         btListNotes.setOnClickListener {
             listNotes()
         }
 
         // add reference to button to read data with Basic Authentication
-        val btListNotesBA=findViewById<Button>(R.id.bt_getNotesWithBA)
+        val btListNotesBA = findViewById<Button>(R.id.bt_getNotesWithBA)
         btListNotesBA.setOnClickListener {
             listNotesBA()
         }
 
+        // add reference to button to read data with Basic Authentication
+        val btListNotesJWT = findViewById<Button>(R.id.bt_getNotesWithJWT)
+        btListNotesJWT.setOnClickListener {
+            listNotesJWT()
+        }
+
         // clean screen
-        val btClear=findViewById<Button>(R.id.bt_ClearScreen)
+        val btClear = findViewById<Button>(R.id.bt_ClearScreen)
         btClear.setOnClickListener {
             // do something to clear screen
             configureList(emptyList())
@@ -64,11 +71,55 @@ class MainActivity : AppCompatActivity() {
      * access the API with Basic Authentication
      */
     private fun listNotesBA() {
-        val call = RetrofitInitializer()
-                      .noteService()
-                      .listBA(Credentials.basic("admin", "admin"))
+        val call = RetrofitInitializer().noteService().listBA(Credentials.basic("admin", "admin"))
         processList(call)
     }
+
+    /**
+     * access to data using JWToken
+     */
+    private fun listNotesJWT() {
+        loginJWT("admin", "admin") {
+            Toast.makeText(
+                    this, "Token: $it?.token", Toast.LENGTH_LONG
+            ).show()
+            val call = RetrofitInitializer()
+                           .noteService()
+                           .listJWT(token = "Bearer " + it?.token)
+            processList(call)
+        }
+    }
+
+    private fun loginJWT(username: String,
+                         password: String,
+                         onResult: (TokenJWT?) -> Unit ) {
+        // ask Retrofit to authenticate with the supplied
+        // 'username' and 'password'
+        val call = RetrofitInitializer()
+                      .noteService()
+                      .loginJWT(username,password)
+        // if we have received the TOKEN, we can do some work...
+        call.enqueue(object : Callback<TokenJWT>{
+            override fun onFailure(call: Call<TokenJWT>, t: Throwable) {
+                // writes on console the error
+                t.printStackTrace()
+                // returns no data
+                onResult(null)
+            }
+            override fun onResponse(call: Call<TokenJWT>, response: Response<TokenJWT>) {
+                // 'reads' the TOKEN
+                val tokenResult = response.body()
+                // returns the TOKEN
+                onResult(tokenResult)
+            }
+        })
+    }
+
+
+
+
+
+
 
     /**
      * create a random Note
@@ -93,18 +144,20 @@ class MainActivity : AppCompatActivity() {
     private fun addNote(note: Note, onResult: (APIResult?) -> Unit) {
         // prepare Retrofit to add the Note
         val call = RetrofitInitializer()
-                      .noteService()
-                      .addNote(note.title, note.description)
+                        .noteService()
+                        .addNote(note.title, note.description)
 
         // Tell Retrofit to do the work
-        call.enqueue(object :Callback<APIResult>{
+        call.enqueue(object : Callback<APIResult> {
             override fun onFailure(call: Call<APIResult>, t: Throwable) {
                 t.printStackTrace()
                 onResult(null)
             }
-            override fun onResponse(call: Call<APIResult>,
-                                    response: Response<APIResult>) {
-                val addedNote=response.body()
+
+            override fun onResponse(
+                    call: Call<APIResult>, response: Response<APIResult>
+            ) {
+                val addedNote = response.body()
                 onResult(addedNote)
             }
         })
@@ -123,7 +176,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * add the Notes to the interface
      */
-    private fun processList(call:Call<List<Note>>){
+    private fun processList(call: Call<List<Note>>) {
         // use data read
         call.enqueue(object : Callback<List<Note>?> {
             override fun onResponse(
