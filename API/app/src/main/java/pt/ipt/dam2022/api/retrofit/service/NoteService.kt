@@ -36,6 +36,10 @@ interface NoteService {
                 @Field("description") description :String?
     ): Call<APIResult>
 
+
+    @DELETE("API/deleteNote.php")
+    fun deleteNote():Call<APIResult>
+
     // we will need here some more code to work with JWT...
 }
 

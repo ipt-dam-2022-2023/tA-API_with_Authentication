@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //********************************************************
+        // here we must ask for permission to access internet
+        // please, see code from last classes
+        //********************************************************
+        
+
         // add reference to button that we are going to use
         // to add some random data to API
         val btNewNote = findViewById<Button>(R.id.bt_new_note)
@@ -50,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         val btClear=findViewById<Button>(R.id.bt_ClearScreen)
         btClear.setOnClickListener {
             // do something to clear screen
+            configureList(emptyList())
         }
     }
 
